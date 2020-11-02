@@ -1,0 +1,18 @@
+[
+    {"DeviceNumber":"00101","RespirationSignal":[11787],"ECGWaveform":[8187,8186,8180,8182,8198,8216,8237,8259,8277,8305],"BatteryCheck":[389],"Time":"2020-08-12 11:59:02.803","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[12059],"ECGWaveform":[8341,8373,8390,8395,8395,8389,8352,8233,7965,7538],"ArrhythmiaCode":[0],"Time":"2020-08-12 11:59:02.889","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[12133],"ECGWaveform":[7061,6669,6442,6347,6331,6271,6305,6361,6447,6589],"LeadIStValue":[96],"Time":"2020-08-12 11:59:02.965","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[11633],"ECGWaveform":[7757,7782,7807,7845,7904,7984,8085,8180,8247,8307],"RRInterval":[708],"Time":"2020-08-12 11:59:03.062","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[11305],"ECGWaveform":[8836,8863,8889,8906,8916,8929,8947,8962,8971,8978],"ArrhythmiaAnnotation":[5],"Time":"2020-08-12 11:59:03.173","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[11956],"RPeak":true,"ECGWaveform":[8843,8810,8787,8768,8741,8710,8679,8643,8599,8557],"ArrhythmiaCode":[34],"Time":"2020-08-12 11:59:03.331","setSound":true},
+    {"DeviceNumber":"00101","RespirationSignal":[12489],"ECGWaveform":[8194,8189,8189,8189,8186,8190,8196,8197,8191,8186],"FWVersion":[108],"Time":"2020-08-12 11:59:03.378","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[12419],"ECGWaveform":[8195,8194,8193,8189,8180,8172,8178,8189,8187,8181],"ArrhythmiaCode":[34],"Time":"2020-08-12 11:59:03.511","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[12101],"ECGWaveform":[8187,8191,8199,8199,8192,8187,8186,8183,8178,8181],"LeadOffStatus":[0],"Time":"2020-08-12 11:59:03.605","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[11471],"ECGWaveform":[8178,8178,8182,8186,8187,8190,8199,8204,8202,8200],"Temperature":[300],"Time":"2020-08-12 11:59:03.680","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[11309],"ECGWaveform":[8172,8180,8199,8208,8203,8192,8180,8172,8169,8174],"ArrhythmiaCode":[34],"Time":"2020-08-12 11:59:03.769","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[12847],"ECGWaveform":[8142,8156,8208,8287,8379,8488,8615,8752,8891,9034],"ArrhythmiaAnnotation":[5],"Time":"2020-08-12 11:59:03.843","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[16000],"ECGWaveform":[8041,8060,8077,8081,8079,8084,8087,8085,8084,8088],"LeadIStValue":[96],"Time":"2020-08-12 11:59:03.973","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[16000],"ECGWaveform":[8091,8102,8111,8114,8120,8125,8128,8131,8128,8120],"RRInterval":[708],"Time":"2020-08-12 11:59:04.060","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[16000],"ECGWaveform":[8178,8182,8189,8195,8197,8188,8186,8200,8214,8214],"ArrhythmiaCode":[34],"Time":"2020-08-12 11:59:04.161","setSound":false},
+    {"DeviceNumber":"00101","RespirationSignal":[16000],"ECGWaveform":[8267,8264,8269,8270,8255,8235,8224,8208,8191,8187],"ArrhythmiaCode":[0],"Time":"2020-08-12 11:59:04.230","setSound":false}
+]
