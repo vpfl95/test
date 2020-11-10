@@ -131,14 +131,14 @@ export class EcgComponent implements OnInit {
   private pathlength: any;
   private a: any[] = [];
   private data: any[] = [];
+  private focus: any;
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, private dataService2: DataService) {
     this.width = 500 - this.margin.left - this.margin.right;
     this.height = 125 - this.margin.top - this.margin.bottom;
   }
 
   ngOnInit() {
-   
     this.dataService.onMessage().subscribe(
       msg => {
           this.data=msg;
@@ -232,6 +232,8 @@ export class EcgComponent implements OnInit {
           .ease(d3.easeSin)
           .duration(10000)
           .attr("stroke-dashoffset", 0); 
+     
   }
 
+  
 }

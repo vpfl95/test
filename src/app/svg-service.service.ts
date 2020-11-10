@@ -1,24 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
+import {HostListener} from '@angular/core';
 import * as d3 from 'd3';
 import * as d3Scale from 'd3-scale';
 import * as d3Shape from 'd3-shape';
 import * as d3Array from 'd3-array';
 import * as d3Axis from 'd3-axis';
 import * as d3Ease from 'd3-ease';
-import {DataService} from '../data.service';
-import { webSocket, WebSocketSubject } from "rxjs/webSocket";
-import {HostListener} from '@angular/core';
-import {SvgServiceService} from '../svg-service.service'
-@Component({
-  selector: 'app-respiration',
-  templateUrl: './respiration.component.html',
-  styleUrls: ['./respiration.component.css']
+import {DataService} from './data.service';
+@Injectable({
+  providedIn: 'root'
 })
-export class RespirationComponent implements OnInit {
+export class SvgServiceService {
 
-  title = 'RespirationSignal';
-
-  private datas1 = [
+  private datas = [
     {"DeviceNumber":"00101","RespirationSignal":[7495],"ECGWaveform":[6749,6878,6980,7090,7210,7319,7418,7519,7624,7709],"ArrhythmiaCode":[0],"Time":"2020-08-13 12:02:37.798","setSound":false},
     {"DeviceNumber":"00101","RespirationSignal":[7524],"ECGWaveform":[7757,7782,7807,7845,7904,7984,8085,8180,8247,8307],"RespirationRate":[10],"Time":"2020-08-13 12:02:37.868","setSound":false},
     {"DeviceNumber":"00101","RespirationSignal":[7527],"ECGWaveform":[8365,8413,8447,8482,8522,8562,8587,8597,8603,8612],"ArrhythmiaAnnotation":[5],"Time":"2020-08-13 12:02:37.925","setSound":false},
@@ -1032,449 +1026,232 @@ export class RespirationComponent implements OnInit {
     {"DeviceNumber":"00101","RespirationSignal":[8490],"ECGWaveform":[8942,8917,8900,8892,8876,8843,8810,8787,8768,8741],"RPeak":true,"ArrhythmiaAnnotation":[5],"Time":"2020-08-13 12:03:18.973","setSound":true},
     {"DeviceNumber":"00101","RespirationSignal":[8689],"RPeak":true,"ECGWaveform":[8710,8679,8643,8599,8557,8521,8492,8464,8438,8415],"BatteryCheck":[406],"Time":"2020-08-13 12:03:19.032","setSound":false},
     ];
-
-    private width: number;
-    private height: number;
-    private xScale: any;
-    private yScale: any;
-    private line: d3Shape.Line<[number, number]>;
-    private margin = {top: 15, right: 20, bottom: 30, left: 50};
-    private path:any;
-    private pathlength: any;
-    private data2: Array<any> = new Array();
-    private ecgData: any[] = [];
-     ecgData1: any;
-     ecgData2: any;
-     ecgData3: any;
-     ecgData4: any;
-     ecgData5: any;
-    data: any;    
-    private svg1: any;
-    private svg2: any;
-    private svg3:any;
-    private svg4: any;
-    private svg5: any;
-
-    private focus1: any
-    private focus2: any
-    private focus3: any
-    private focus4: any
-    private focus5: any
-    index: number;
-    private x: any;
-    private xScaleValue: any;
-    private yScaleValue: any;
-    
-
-    constructor(private dataService: DataService) {
-        this.width = 2000 - this.margin.left - this.margin.right;
-        this.height = 150 - this.margin.top - this.margin.bottom;
-        this.index=0;
-    }
-    
-    @HostListener('mousemove', ['$event'])
-    onMouseMove(event) {
-      // this.xPos=event.clientX;
-      // this.yPos=event.clientY;
-      // this.scalePointPosition(event,this.focus1);
-      // this.scalePointPosition(event,this.focus2);
-      // this.scalePointPosition(event,this.focus3);
-      // this.scalePointPosition(event,this.focus4);
-      // this.scalePointPosition(event,this.focus5);
-      this. x = event.offsetX-this.margin.left;
-
-
+    datas2 = this.datas.slice(0,250);
+    datas3 = this.datas.slice(250,500);
+    datas4 = this.datas.slice(500,750);
+    datas5 = this.datas.slice(750,1000);
+  private width: number;
+  private height: number;
+  private xScale: any;
+  private yScale: any;
+  private line: d3Shape.Line<[number, number]>;
+  private margin = {top: 15, right: 20, bottom: 30, left: 50};
+  private path:any;
+  private pathlength: any;
+  private xPos: any;
+  private yPos: any;
+  private xScaleValue: any;
+  private yScaleValue: any;
+  private svg: any;
+  private svg1: any;
+  private svg2: any;
+  private svg3:any;
+  private svg4: any;
+  private svg5: any;
+  private focus: any
+  private focus1: any
+  private focus2: any
+  private focus3: any
+  private focus4: any
+  private focus5: any
+  x: any;
+  data: any;
+  constructor(private dataService: DataService) {
+      this.width = 2000 - this.margin.left - this.margin.right;
+      this.height = 125 - this.margin.top - this.margin.bottom;
   }
-    ngOnInit() { 
+  
+  
+   @HostListener('mousemove', ['$event'])
 
-      this.datas1.forEach((d, i) => {
-        for (let j = 0; j < 10; j++) {
-          this.ecgData.push({
-            ecg_x: i * 10 + j,
-            ecg_y: d.ECGWaveform[j],
-            Time: d.Time,
-            ArrhythmiaAnnotation: d.ArrhythmiaAnnotation
-          })
-        }
-       
-        this.ecgData1 = this.ecgData.slice(0,2000);
-        this.ecgData2 = this.ecgData.slice(2000,4000);
-        this.ecgData3 = this.ecgData.slice(4000,6000);
-        this.ecgData4 = this.ecgData.slice(6000,8000);
-        this.ecgData5 = this.ecgData.slice(8000,10000);
-      
-      })
-
-      this.initSvg();
-      this.initAxis();
-      this.drawAxis();
-      if(this.ecgData.length>0)this.drawLine(this.svg1,this.ecgData1,this.focus1);
-      if(this.ecgData.length>2000) this.drawLine(this.svg2,this.ecgData2,this.focus2);
-      if(this.ecgData.length>4000) this.drawLine(this.svg3,this.ecgData3,this.focus3);
-      if(this.ecgData.length>6000) this.drawLine(this.svg4,this.ecgData4,this.focus4);
-      if(this.ecgData.length>8000) this.drawLine(this.svg5,this.ecgData5,this.focus5);
-      
-      
-        // this.dataService.onMessage().subscribe(
-        //     msg => {
-        //         // console.log(this.data);
-        //         //console.log(msg.RespirationSignal);
-        //         this.data=msg;
-        //         // this.data.push(msg);
-        //         // console.log(this.data);
-        //         // console.log(this.datas);
-        //         this.initSvg();
-        //         this.initAxis();
-        //         this.drawAxis();
-        //         this.drawLine();
-        //     },
-        //     err => console.log(err),
-        //     () => console.log('end')
-        //   );
+  createChart(svgClass:any){
+    if(svgClass==".respiration"){
+      this.data=this.datas;
+      this.focus=this.focus1;
+      this.svg=this.svg1;
     }
-   
-    private initSvg() {
-        if(this.ecgData.length>0)this.svg1 = d3.select(".respiration").append('g').attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
-        if(this.ecgData.length>2000) this.svg2 = d3.select(".respiration2").append('g').attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
-        if(this.ecgData.length>4000) this.svg3 = d3.select(".respiration3").append('g').attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');  
-        if(this.ecgData.length>6000) this.svg4 = d3.select(".respiration4").append('g').attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')'); 
-        if(this.ecgData.length>8000) this.svg5 = d3.select(".respiration5").append('g').attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')'); 
+    else if(svgClass==".respiration2"){
+      this.data=this.datas2;
+      this.focus=this.focus2;
+      this.svg=this.svg2;
     }
-
-    private initAxis() {
-        this.xScale = d3Scale.scaleLinear()
-            .domain([0,10000])
-            .range([0, this.width]);
-        this.yScale = d3Scale.scaleLinear()
-            .domain([5000,10000])
-            //.domain([0,d3Array.max(this.datas)])
-            //.domain(d3Array.extent(this.data, (d) => d.RespirationSignal[0]))
-            .range([this.height, 0]);
+    else if(svgClass==".respiration3"){
+      this.data=this.datas3;
+      this.focus=this.focus3;
+      this.svg=this.svg3;
     }
-
-    private drawAxis() {
-      if(this.ecgData.length>0){
-        this.svg1.append('g')
-                .attr('transform', 'translate(0,' + this.height + ')')
-                .call(d3Axis.axisBottom(this.xScale));
-        this.svg1.append('g')
-                .call(d3Axis.axisLeft(this.yScale));
-      }
-      if(this.ecgData.length>2000){
-        this.svg2.append('g')
-                .attr('transform', 'translate(0,' + this.height + ')')
-                .call(d3Axis.axisBottom(this.xScale));
-        this.svg2.append('g')
-                .call(d3Axis.axisLeft(this.yScale));
-      }
-      if(this.ecgData.length>4000){
-        this.svg3.append('g')
-                .attr('transform', 'translate(0,' + this.height + ')')
-                .call(d3Axis.axisBottom(this.xScale));
-        this.svg3.append('g')
-                .call(d3Axis.axisLeft(this.yScale));    
-      }
-      if(this.ecgData.length>6000){
-        this.svg4.append('g')
-                .attr('transform', 'translate(0,' + this.height + ')')
-                .call(d3Axis.axisBottom(this.xScale));
-        this.svg4.append('g')
-                .call(d3Axis.axisLeft(this.yScale));   
-      }
-      if(this.ecgData.length>8000){
-        this.svg5.append('g')
-                .attr('transform', 'translate(0,' + this.height + ')')
-                .call(d3Axis.axisBottom(this.xScale));
-        this.svg5.append('g')
-                  .call(d3Axis.axisLeft(this.yScale));  
-      } 
+    else if(svgClass==".respiration4"){
+      this.data=this.datas4;
+      this.focus=this.focus4;
+      this.svg=this.svg4;
     }
+    else if(svgClass==".respiration5"){
+      this.data=this.datas5;
+      this.focus=this.focus5;
+      this.svg=this.svg5;
+    }
+    this.initSvg(svgClass);
+    this.initAxis();
+    this.drawAxis();
+    this.drawLine(this.focus);
+    //this.scalePointPosition(x,this.focus)
+  }
+  onMouseMove(event:any) {
+    this.xPos=event.clientX;
+    this.yPos=event.clientY;
+    this.x = event.offsetX-this.margin.left;
+    this.scalePointPosition(event,this.focus); 
+}
+  initSvg(svgClass: string) {
+      this.svg = d3.select(svgClass)
+          .append('g')
+          .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+  }
 
-    private drawLine(svg:any, data:any, focus:any) {
+  initAxis() {
+      this.xScale = d3Scale.scaleLinear()
+          .domain([0,2000])
+          .range([0, this.width]);
+      this.yScale = d3Scale.scaleLinear()
+          .domain([0,15000])
+          //.domain([0,d3Array.max(this.datas)])
+          //.domain(d3Array.extent(this.data, (d) => d.RespirationSignal[0]))
+          .range([this.height, 0]);
+  }
+
+  drawAxis() {
+      this.svg.append('g')
+          .attr('transform', 'translate(0,' + this.height + ')')
+          .call(d3Axis.axisBottom(this.xScale));
+      this.svg.append('g')
+          .call(d3Axis.axisLeft(this.yScale));
+  }
+
+  drawLine(focus: any) {
       this.line = d3Shape.line()
-      .x((d: any,i) => this.xScale(i))
-      .y((d: any,i) => this.yScale(d.ecg_y));
+          .x( (d,i) => this.xScale(i) )
+          .y( (d: any,i) => this.yScale(d.RespirationSignal) );
 
+      this.path=this.svg.append('path')
+          .datum(this.data)
+          .attr('class', 'line')
+          .attr("fill", "none")
+          .attr("stroke", "blue")
+          .attr("stroke-width", "2px")
+          .attr("width",500)
+          .attr('d', this.line);
+      //renders x and y crosshair
+      focus = this.svg
+                      .append('g')
+                      .attr('class', 'focus')
+                      .style('display', 'none');
 
-      this.path=svg.append('path')
-                  .datum(data)
-                  .attr('class', 'line')
-                  .attr("fill", "none")
-                  .attr("stroke", "black")
-                  .attr("stroke-width", "1.2px")
-                  .attr("width",500)
-                  .attr('d', this.line); 
-          //Arrhythmia>0 이면 빨간점표시
-      svg.selectAll("dot")
-          .data(data)
-          .enter().append("circle")
-          .attr("r", 0.9)
-          .attr("cx", (d:any,i) => {return this.xScale(i);})
-          .attr("cy", (d:any,i) => {
-            if(d.ArrhythmiaAnnotation>0){
-                return this.yScale(d.ecg_y);
-            } else return this.yScale(0);
-            }).style("fill",'red');
+      focus.append('circle').attr('r', 2.5);
+      focus.append('text').attr("x", 9);
+      focus.append('line').classed('x', true);
+      focus.append('line').classed('y', true);
 
-      focus = svg.append('g')
-                .attr('class', 'focus')
-                .style('display', 'none');
-      this.renderPoint(focus,svg);
-        // if(this.ecgData.length>0){
-        //   this.path=this.svg1.append('path')
-        //                     .datum(this.ecgData1)
-        //                     .attr('class', 'line')
-        //                     .attr("fill", "none")
-        //                     .attr("stroke", "black")
-        //                     .attr("stroke-width", "1.2px")
-        //                     .attr("width",500)
-        //                     .attr('d', this.line); 
-        //   //Arrhythmia>0 이면 빨간점표시
-        //   this.svg1.selectAll("dot")
-        //     .data(this.ecgData1)
-        //     .enter().append("circle")
-        //     .attr("r", 1)
-        //     .attr("cx", (d:any,i) => {return this.xScale(i);})
-        //     .attr("cy", (d:any,i) => {
-        //       if(d.ArrhythmiaAnnotation>0){
-        //         return this.yScale(d.ecg_y);
-        //     } else return this.yScale(0);
-        //     }).style("fill",'red');
+      this.svg.append('rect')
+          .attr('class', 'overlay')
+          .data(this.data)
+          .attr('width', this.width)
+          .attr('height', this.height)
+          .attr('opacity',0)
+          .on('mouseover', () => {
+            focus.style('display', null);
+            focus.append("text")
+              .attr("x", 10)
+              .attr("y", 20)
+              .attr("opacity", 1).text("ㄴㄻㄴ");
+              })
+          .on('mouseout', () => {
+             focus.style('display', 'none');
+             focus.selectAll("text").remove();
+          })
+          .on('mousemove', (d) => {
+  
 
-        //   this.focus1 = this.svg1.append('g')
-        //                   .attr('class', 'focus')
-        //                   .style('display', 'none');
-        //   this.renderPoint(this.focus1,this.svg1);
-        // }
-        // if(this.ecgData.length>2000){
-        //   this.path=this.svg2.append('path')
-        //                     .datum(this.ecgData2)
-        //                     .attr('class', 'line')
-        //                     .attr("fill", "none")
-        //                     .attr("stroke", "black")
-        //                     .attr("stroke-width", "1.2px")
-        //                     .attr("width",500)
-        //                     .attr('d', this.line);
-        //   //Arrhythmia>0 이면 빨간점표시
-        //   this.svg2.selectAll("dot")
-        //           .data(this.ecgData2)
-        //           .enter().append("circle")
-        //           .attr("r", 1)
-        //           .attr("cx", (d:any,i) => {return this.xScale(i);})
-        //           .attr("cy", (d:any,i) => {
-        //             if(d.ArrhythmiaAnnotation>0){
-        //               return this.yScale(d.ecg_y);
-        //           } else return this.yScale(0);
-        //           }).style("fill",'red');
-        //   this.focus2 = this.svg2.append('g')
-        //                     .attr('class', 'focus')
-        //                     .style('display', 'none');
-        //   this.renderPoint(this.focus2,this.svg2);
-        // }
-        // if(this.ecgData.length>4000){
-        //   this.path=this.svg3.append('path')
-        //                     .datum(this.ecgData3)
-        //                     .attr('class', 'line')
-        //                     .attr("fill", "none")
-        //                     .attr("stroke", "black")
-        //                     .attr("stroke-width", "1.5px")
-        //                     .attr("width",500)
-        //                     .attr('d', this.line);
-        //   //Arrhythmia>0 이면 빨간점표시
-        //   this.svg3.selectAll("dot")
-        //           .data(this.ecgData3)
-        //           .enter().append("circle")
-        //           .attr("r", 1.2)
-        //           .attr("cx", (d:any,i) => {return this.xScale(i);})
-        //           .attr("cy", (d:any,i) => {
-        //             if(d.ArrhythmiaAnnotation>0){
-        //               return this.yScale(d.ecg_y);
-        //           } else return this.yScale(0);
-        //           }).style("fill",'red');   
-        //   this.focus3 = this.svg3.append('g')
-        //                           .attr('class', 'focus')
-        //                           .style('display', 'none');
-        //   this.renderPoint(this.focus3,this.svg3);
-        // }
-        // if(this.ecgData.length>6000){
-        //   this.path=this.svg4.append('path')
-        //                     .datum(this.ecgData4)
-        //                     .attr('class', 'line')
-        //                     .attr("fill", "none")
-        //                     .attr("stroke", "black")
-        //                     .attr("stroke-width", "1.5px")
-        //                     .attr("width",500)
-        //                     .attr('d', this.line);
-        //                     //Arrhythmia>0 이면 빨간점표시
-        //   this.svg4.selectAll("dot")
-        //             .data(this.ecgData4)
-        //             .enter().append("circle")
-        //             .attr("r", 1.2)
-        //             .attr("cx", (d:any,i) => {return this.xScale(i);})
-        //             .attr("cy", (d:any,i) => {
-        //               if(d.ArrhythmiaAnnotation>0){
-        //                 return this.yScale(d.ecg_y);
-        //             } else return this.yScale(0);
-        //             }).style("fill",'red');
-        //   this.focus4 = this.svg4.append('g')
-        //                         .attr('class', 'focus')
-        //                         .style('display', 'none');
-        //   this.renderPoint(this.focus4,this.svg4);   
-        // }
-        // if(this.ecgData.length>8000){
-        //   this.path=this.svg5.append('path')
-        //                     .datum(this.ecgData5)
-        //                     .attr('class', 'line')
-        //                     .attr("fill", "none")
-        //                     .attr("stroke", "black")
-        //                     .attr("stroke-width", "1.5px")
-        //                     .attr("width",500)
-        //                     .attr('d', this.line);
-        //   //Arrhythmia>0 이면 빨간점표시
-        //   this.svg5.selectAll("dot")
-        //             .data(this.ecgData5)
-        //             .enter().append("circle")
-        //             .attr("r", 1.2)
-        //             .attr("cx", (d:any,i) => {return this.xScale(i);})
-        //             .attr("cy", (d:any,i) => {
-        //               if(d.ArrhythmiaAnnotation>0){
-        //                 return this.yScale(d.ecg_y);
-        //             } else return this.yScale(0);
-        //             }).style("fill",'red');  
-        //   this.focus5 = this.svg5.append('g')
-        //                         .attr('class', 'focus')
-        //                         .style('display', 'none');
-        //   this.renderPoint(this.focus5,this.svg5);
-        // }
-    }
-
-    private renderPoint(focus: any, svg: any){
-        // renders x and y crosshair
-        focus.append('rect').attr('width',230).attr('height',70).attr('x',0).attr('y',15)
-        .attr('fill','lightsteelblue');
-        focus.append('circle').attr('r', 2.5).attr("fill","blue");
-        focus.append('text').attr('x',100).attr('y',10);
-        focus.append('line').classed('x', true);
-        focus.append('line').classed('y', true);
-       
-      
-
-        svg.append('rect')
-            .attr('class', 'overlay')
-            .attr('width', this.width)
-            .attr('height', this.height)
-            .attr('opacity',0)
-            .on('mouseover', () => {
-              focus.style('display', null);
-              focus.append("text")
+            this.xScaleValue = this.xScale.invert(this.x);  //x축 값
+            const i = Math.round(this.xScaleValue);     //x축 값 반올림
+            this.yScaleValue = d[i];          //y축 값
+            //console.log(d);
+            focus.attr('transform', 'translate(' + this.x + ',' + this.yScale(d.RespirationSignal[i]) + ')');
+           
+          //그래프 좌표에 눈금선 표시
+            focus.select('line.x')
+                .attr('x1', 0)
+                .attr('x2', this.xScale(this.xScaleValue)- this.width)
+                .attr('y1', 0)
+                .attr('y2', 0);
+            focus.select('line.y')
+                .attr('x1', 0)
+                .attr('x2', 0)
+                .attr('y1', 0)
+                .attr('y2', this.height - this.yScale(d.RespirationSignal));
+          //정보 텍스트 표시
+            focus.select("text")
+                .datum(d)
                 .attr("x", 10)
                 .attr("y", 10)
-                .attr("opacity", 1);
-                })
-            .on('mouseout', () => {
-              focus.style('display', 'none');
-              focus.selectAll("text").remove();
-            })
-            .on('mousemove',(d: any) =>{
-              this.xScaleValue= this.xScale.invert(this.x);
-              const i = Math.round(this.xScaleValue);
-              this.yScaleValue=this.data[i];
-              //동그라미 위치 이동
-              focus.attr('transform', 'translate(' + this.x + ',' + this.yScale(this.yScaleValue.ecg_y) + ')');
-              //크로스헤어 표시
-              focus.select('line.x')
-                    .attr('x1', 0)
-                    .attr('x2', this.xScale(this.xScaleValue)- this.width)
-                    .attr('y1', 0)
-                    .attr('y2', 0);
-              focus.select('line.y')
-                    .attr('x1', 0)
-                    .attr('x2', 0)
-                    .attr('y1', 0)
-                    .attr('y2', this.height - this.yScale(this.yScaleValue.ecg_y));
-              //정보 텍스트 표시
-              focus.select('text')
-                  .datum(this.yScaleValue)
-                  .attr("x", 10)
-                  .attr("y", 10)
-                  .attr("opacity", 1)
-                  .attr("class", "tooltip")
-                  .html((d:any) => {
-                      if(d.ArrhythmiaAnnotation!=null && d.ArrhythmiaAnnotation>0 )
-                      return "<tspan  x='0' dy='1.2em' >" + 'Time: ' + d.Time + "</tspan>" 
-                      + "<tspan x='0' dy='1.2em'>" + 'Signal: ' + d.ecg_y + "</tspan>"
-                      + "<tspan x='0' dy='1.2em'>" + 'Arrhythmia: ' + d.ArrhythmiaAnnotation + "</tspan>";
-                      else
-                      return "<tspan  x='0' dy='1.2em' >" + 'Time: ' + d.Time + "</tspan>" 
-                      + "<tspan x='0' dy='1.2em'>" + 'Signal: ' + d.ecg_y + "</tspan>";
-                  });
-            });
-
-           
-         d3.select('.overlay').style('fill', 'none');
-         d3.select('.overlay').style('pointer-events', 'all');
-         d3.selectAll('.focus line').style('fill', 'none');
-         d3.selectAll('.focus line').style('stroke', '#67809f');
-         d3.selectAll('.focus line').style('stroke-width', '1.5px');
-         d3.selectAll('.focus line').style('stroke-dasharray', '3 3'); 
-    }
-    
+                .attr("opacity", 1)
+                .html((d:any) => {
+                  if(d.ArrhythmiaAnnotation!=null && d.ArrhythmiaAnnotation>0 )
+                    return "<tspan  x='0' dy='1.2em' >" + 'Time: ' + d.Time + "</tspan>" 
+                    + "<tspan x='0' dy='1.2em'>" + 'Signal: ' + d.RespirationSignal + "</tspan>"
+                    + "<tspan x='0' dy='1.2em'>" + 'Arrhythmia: ' + d.ArrhythmiaAnnotation + "</tspan>";
+                  else
+                    return "<tspan  x='0' dy='1.2em' >" + 'Time: ' + d.Time + "</tspan>" 
+                    + "<tspan x='0' dy='1.2em'>" + 'Signal: ' + d.RespirationSignal + "</tspan>";
+                 });
+          });
+          
+       d3.select('.overlay').style('fill', 'none');
+       d3.select('.overlay').style('pointer-events', 'all');
+       d3.selectAll('.focus line').style('fill', 'none');
+       d3.selectAll('.focus line').style('stroke', '#67809f');
+       d3.selectAll('.focus line').style('stroke-width', '1.5px');
+       d3.selectAll('.focus line').style('stroke-dasharray', '3 3');
+  }
 
 
+  scalePointPosition(event,focus:any){
+      //마우스위치에 따른 그래프 좌표설정
+      let x = event.offsetX-this.margin.left;
+      if (this.x < 0 || this.x > this.width) { return; }
 
-    // private scalePointPosition(event,focus:any){
-    //     //마우스위치에 따른 그래프 좌표설정
-    //     this. x = event.offsetX-this.margin.left;
-    //     if (this.x < 0 || this.x > this.width) { return; }
-    //     this. xScaleValue = this.xScale.invert(this.x);  //x축 값
-    //     const i = Math.round(this.xScaleValue);     //x축 값 반올림
-    //     //this.yScaleValue = this.datas[i];
-    //     if(this.index==1){
-    //       this. yScaleValue = this.ecgData1[i];          //y축 값
-    //     }
-    //     else if(this.index==2){
-    //       this.yScaleValue = this.ecgData2[i];
-    //     }
-    //     else if(this.index==3){
-    //       this.yScaleValue = this.ecgData3[i];
-    //     }
-    //     else if(this.index==4){
-    //       this.yScaleValue = this.ecgData4[i];
-    //     }
-    //     else if(this.index==5){
-    //       this.yScaleValue = this.ecgData5[i];
-    //     }
-    //     // console.log(this.xScaleValue);
-    //     // console.log(this.yScaleValue.RespirationSignal);
-    //     focus.attr('transform', 'translate(' + this.x + ',' + this.yScale(this.yScaleValue.ecg_y) + ')');
-        
-    //    //그래프 좌표에 눈금선 표시
-    //     focus.select('line.x')
-    //         .attr('x1', 0)
-    //         .attr('x2', this.xScale(this.xScaleValue)- this.width)
-    //         .attr('y1', 0)
-    //         .attr('y2', 0);
-    //     focus.select('line.y')
-    //         .attr('x1', 0)
-    //         .attr('x2', 0)
-    //         .attr('y1', 0)
-    //         .attr('y2', this.height - this.yScale(this.yScaleValue.ecg_y));
-    //    //정보 텍스트 표시
-    //    focus.select("text")
-    //         .datum(this.yScaleValue)
-    //         .attr("x", 10)
-    //         .attr("y", 10)
-    //         .attr("opacity", 1)
-    //         .html((d:any) => {
-    //            if(d.ArrhythmiaAnnotation!=null && d.ArrhythmiaAnnotation>0 )
-    //             return "<tspan  x='0' dy='1.2em' >" + 'Time: ' + d.Time + "</tspan>" 
-    //             + "<tspan x='0' dy='1.2em'>" + 'Signal: ' + d.ecg_y + "</tspan>"
-    //             + "<tspan x='0' dy='1.2em'>" + 'Arrhythmia: ' + d.ArrhythmiaAnnotation + "</tspan>";
-    //            else
-    //             return "<tspan  x='0' dy='1.2em' >" + 'Time: ' + d.Time + "</tspan>" 
-    //             + "<tspan x='0' dy='1.2em'>" + 'Signal: ' + d.ecg_y + "</tspan>";
-    //         });
-    // }
-    
-   
+      var xScaleValue = this.xScale.invert(this.x);  //x축 값
+      const i = Math.round(xScaleValue);     //x축 값 반올림
+      var yScaleValue = this.data[i];          //y축 값
+      // console.log(data);
+      // console.log(xScaleValue);
+      // console.log(yScaleValue.RespirationSignal);
+     focus.attr('transform', 'translate(' + x + ',' + this.yScale(yScaleValue.RespirationSignal) + ')')
+     //그래프 좌표에 눈금선 표시
+     focus.select('line.x')
+          .attr('x1', 0)
+          .attr('x2', this.xScale(xScaleValue)- this.width)
+          .attr('y1', 0)
+          .attr('y2', 0);
+      focus.select('line.y')
+          .attr('x1', 0)
+          .attr('x2', 0)
+          .attr('y1', 0)
+          .attr('y2', this.height - this.yScale(yScaleValue.RespirationSignal));
+     //정보 텍스트 표시
+     focus.select("text")
+          .datum(yScaleValue)
+          .attr("x", 10)
+          .attr("y", 10)
+          .attr("opacity", 1)
+          .html((d:any) => {
+             if(d.ArrhythmiaAnnotation!=null && d.ArrhythmiaAnnotation>0 )
+              return "<tspan  x='0' dy='1.2em' >" + 'Time: ' + d.Time + "</tspan>" 
+              + "<tspan x='0' dy='1.2em'>" + 'Signal: ' + d.RespirationSignal + "</tspan>"
+              + "<tspan x='0' dy='1.2em'>" + 'Arrhythmia: ' + d.ArrhythmiaAnnotation + "</tspan>";
+             else
+              return "<tspan  x='0' dy='1.2em' >" + 'Time: ' + d.Time + "</tspan>" 
+              + "<tspan x='0' dy='1.2em'>" + 'Signal: ' + d.RespirationSignal + "</tspan>";
+          });
+  }
+
 }
